@@ -1,0 +1,882 @@
+basePath: /api
+definitions: {}
+info:
+  description: 中升后台管理系统API接口手册
+  title: 中升后台
+  version: v1
+paths:
+  /v1/arrival_notifications/rules:
+    get:
+      description: 需要 arrival_notification.view_self 或 arrival_notification.view_all 权限
+      parameters:
+        - description: 页码，未传则默认第 1 页
+          example: 1
+          in: query
+          name: page
+          required: false
+          type: integer
+        - description: 一页大小，未传默认为 20 条
+          example: 1
+          in: query
+          name: page_size
+          required: false
+          type: integer
+        - description: 标题
+          example: 测试
+          in: query
+          name: title
+          required: false
+          type: string
+        - description: 创建人ID
+          example: 202
+          in: query
+          name: creator_id
+          required: false
+          type: integer
+        - description: |
+            状态，空代表全部
+            + 0: 全部
+            + 1: 未启用
+            + 2: 已启用
+            + 3: 已停用
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          example: 1
+          in: query
+          name: status
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              data:
+                properties:
+                  rules:
+                    description: 到店提醒规则列表
+                    items:
+                      properties:
+                        content:
+                          description: 提醒内容
+                          example: 测试内容
+                          type: string
+                        create_date:
+                          description: 创建日期
+                          example: 2020/05/20
+                          type: string
+                        creator_name:
+                          description: 创建人
+                          example: 张三
+                          type: string
+                        frequency_name:
+                          description: |
+                            重复频率
+                            + 每日首次进店
+                            + 每次进店
+                            + 仅提醒一次
+                          example: 每次进店
+                          type: string
+                        id:
+                          description: 到店提醒规则ID
+                          example: 1
+                          type: integer
+                        recipient_names:
+                          description: 提醒对象
+                          example: 张三、王二
+                          type: string
+                        status:
+                          description: |
+                            提醒规则状态
+                            + 1: 未启用
+                            + 2: 已启用
+                            + 3: 已停用
+                          example: 1
+                          type: integer
+                        status_name:
+                          description: |
+                            提醒规则状态名称
+                            + 未启用
+                            + 已启用
+                            + 已停用
+                          example: 未启用
+                          type: string
+                        title:
+                          description: 提醒标题
+                          example: 测试标题
+                          type: string
+                        type_name:
+                          description: |
+                            提醒条件
+                            + 指定条件
+                            + 指定车牌
+                          example: 指定车牌
+                          type: string
+                      type: object
+                    type: array
+                  total_size:
+                    description: 数据总数
+                    example: 100
+                    type: integer
+                type: object
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 到店提醒规则列表
+      tags:
+        - 客户到店提醒
+    post:
+      description: 需要 arrival_notification.create 权限
+      parameters:
+        - in: body
+          name: post_data
+          required: true
+          schema:
+            properties:
+              content:
+                description: 提醒内容
+                maxLength: 50
+                minLength: 1
+                type: string
+              filter:
+                description: 指定条件
+                properties:
+                  buy_delay_ins:
+                    description: |
+                      是否购买延保
+                      + 0: 全部
+                      + 1: 是
+                      + 2: 否
+                    type: integer
+                  customer_attr_id:
+                    description: 客户属性ID
+                    type: integer
+                  customer_status:
+                    description: |
+                      客户状态
+                      + 0: 全部
+                      + 1: 正常
+                      + 2: 流失
+                      + 3: 未知
+                    type: integer
+                  customer_type_ids:
+                    description: 客户类型ID列表
+                    items:
+                      type: integer
+                    type: array
+                  enter_workshop_from:
+                    description: 最后入场起始日期
+                    format: date
+                    type: string
+                  enter_workshop_to:
+                    description: 最后入场截止日期
+                    format: date
+                    type: string
+                  first_maintain_from:
+                    description: 首保起始日期
+                    format: date
+                    type: string
+                  first_maintain_to:
+                    description: 首保截止日期
+                    format: date
+                    type: string
+                  free_repair:
+                    description: |
+                      免费保修
+                      + 0: 全部
+                      + 1: 已过期
+                      + 2: 未过期
+                    type: integer
+                  model_desc:
+                    description: 车型
+                    maxLength: 30
+                    minLength: 0
+                    type: string
+                  next_maintain_from:
+                    description: 下次保养起始日期
+                    format: date
+                    type: string
+                  next_maintain_to:
+                    description: 下次保养截止日期
+                    format: date
+                    type: string
+                  register_date_from:
+                    description: 注册起始日期
+                    format: date
+                    type: string
+                  register_date_to:
+                    description: 注册结束日期
+                    format: date
+                    type: string
+                  repair_advise_from:
+                    description: 维修建议起始日期
+                    format: date
+                    type: string
+                  repair_advise_to:
+                    description: 维修建议结束日期
+                    format: date
+                    type: string
+                  repair_date_from:
+                    description: 保修到期起始日期
+                    format: date
+                    type: string
+                  repair_date_to:
+                    description: 保修到期截止日期
+                    format: date
+                    type: string
+                type: object
+              frequency:
+                description: |
+                  重复频率
+                  + 1: 每日首次到店
+                  + 2: 每次进店
+                  + 3: 仅提醒一次
+                enum:
+                  - 1
+                  - 2
+                  - 3
+                type: integer
+              notification_employee_ids:
+                description: 提醒对象ID列表
+                items:
+                  description: 提醒对象ID
+                  minimum: 1
+                  type: integer
+                maxItems: 20
+                minItems: 1
+                type: array
+              title:
+                description: 提醒内容
+                maxLength: 50
+                minLength: 1
+                type: string
+              type:
+                description: |
+                  提醒条件
+                  + 1: 客户招揽指定条件提醒
+                  + 2: 指定车牌提醒
+                type: integer
+            required:
+              - title
+              - content
+              - notification_employee_ids
+              - frequency
+              - type
+            type: object
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 创建到店提醒规则
+      tags:
+        - 客户到店提醒
+  /v1/arrival_notifications/rules/creators:
+    get:
+      description: 需要 arrival_notification.view_self 或 arrival_notification.view_all 权限
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              data:
+                properties:
+                  creators:
+                    description: 到店提醒规则列表
+                    items:
+                      properties:
+                        id:
+                          description: 创建人ID
+                          example: 1
+                          type: integer
+                        name:
+                          description: 创建人姓名
+                          example: 1
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 到店提醒规则创建人列表
+      tags:
+        - 客户到店提醒
+  '/v1/arrival_notifications/rules/{rule_id}':
+    delete:
+      description: 需要 arrival_notification.delete 权限
+      parameters:
+        - description: 提醒规则ID
+          in: path
+          name: rule_id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 删除到店提醒规则
+      tags:
+        - 客户到店提醒
+    get:
+      description: 需要 arrival_notification.edit 权限
+      parameters:
+        - description: 提醒规则ID
+          in: path
+          name: rule_id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              data:
+                properties:
+                  content:
+                    description: 提醒内容
+                    maxLength: 50
+                    minLength: 1
+                    type: string
+                  filter:
+                    description: 指定条件
+                    properties:
+                      buy_delay_ins:
+                        description: |
+                          是否购买延保
+                          + 0: 全部
+                          + 1: 是
+                          + 2: 否
+                        type: integer
+                      customer_attr_id:
+                        description: 客户属性ID
+                        type: integer
+                      customer_status:
+                        description: |
+                          客户状态
+                          + 0: 全部
+                          + 1: 正常
+                          + 2: 流失
+                          + 3: 未知
+                        type: integer
+                      customer_type_ids:
+                        description: 客户类型ID列表
+                        items:
+                          type: integer
+                        type: array
+                      enter_workshop_from:
+                        description: 最后入场起始日期
+                        format: date
+                        type: string
+                      enter_workshop_to:
+                        description: 最后入场截止日期
+                        format: date
+                        type: string
+                      first_maintain_from:
+                        description: 首保起始日期
+                        format: date
+                        type: string
+                      first_maintain_to:
+                        description: 首保截止日期
+                        format: date
+                        type: string
+                      free_repair:
+                        description: |
+                          免费保修
+                          + 0: 全部
+                          + 1: 已过期
+                          + 2: 未过期
+                        type: integer
+                      model_desc:
+                        description: 车型
+                        maxLength: 30
+                        minLength: 0
+                        type: string
+                      next_maintain_from:
+                        description: 下次保养起始日期
+                        format: date
+                        type: string
+                      next_maintain_to:
+                        description: 下次保养截止日期
+                        format: date
+                        type: string
+                      register_date_from:
+                        description: 注册起始日期
+                        format: date
+                        type: string
+                      register_date_to:
+                        description: 注册结束日期
+                        format: date
+                        type: string
+                      repair_advise_from:
+                        description: 维修建议起始日期
+                        format: date
+                        type: string
+                      repair_advise_to:
+                        description: 维修建议结束日期
+                        format: date
+                        type: string
+                      repair_date_from:
+                        description: 保修到期起始日期
+                        format: date
+                        type: string
+                      repair_date_to:
+                        description: 保修到期截止日期
+                        format: date
+                        type: string
+                    type: object
+                  frequency:
+                    description: |
+                      重复频率
+                      + 1: 每日首次到店
+                      + 2: 每次进店
+                      + 3: 仅提醒一次
+                    enum:
+                      - 1
+                      - 2
+                      - 3
+                    type: integer
+                  notification_employee_ids:
+                    description: 提醒对象ID列表
+                    items:
+                      description: 提醒对象ID
+                      minimum: 1
+                      type: integer
+                    maxItems: 20
+                    minItems: 1
+                    type: array
+                  title:
+                    description: 提醒内容
+                    maxLength: 50
+                    minLength: 1
+                    type: string
+                  type:
+                    description: |
+                      提醒条件
+                      + 1: 客户招揽指定条件提醒
+                      + 2: 指定车牌提醒
+                    type: integer
+                required:
+                  - title
+                  - content
+                  - notification_employee_ids
+                  - frequency
+                  - type
+                type: object
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 获取到店提醒规则
+      tags:
+        - 客户到店提醒
+    put:
+      description: 需要 arrival_notification.edit 权限
+      parameters:
+        - description: 提醒规则ID
+          in: path
+          name: rule_id
+          required: true
+          type: integer
+        - in: body
+          name: post_data
+          required: true
+          schema:
+            properties:
+              content:
+                description: 提醒内容
+                maxLength: 50
+                minLength: 1
+                type: string
+              filter:
+                description: 指定条件
+                properties:
+                  buy_delay_ins:
+                    description: |
+                      是否购买延保
+                      + 0: 全部
+                      + 1: 是
+                      + 2: 否
+                    type: integer
+                  customer_attr_id:
+                    description: 客户属性ID
+                    type: integer
+                  customer_status:
+                    description: |
+                      客户状态
+                      + 0: 全部
+                      + 1: 正常
+                      + 2: 流失
+                      + 3: 未知
+                    type: integer
+                  customer_type_ids:
+                    description: 客户类型ID列表
+                    items:
+                      type: integer
+                    type: array
+                  enter_workshop_from:
+                    description: 最后入场起始日期
+                    format: date
+                    type: string
+                  enter_workshop_to:
+                    description: 最后入场截止日期
+                    format: date
+                    type: string
+                  first_maintain_from:
+                    description: 首保起始日期
+                    format: date
+                    type: string
+                  first_maintain_to:
+                    description: 首保截止日期
+                    format: date
+                    type: string
+                  free_repair:
+                    description: |
+                      免费保修
+                      + 0: 全部
+                      + 1: 已过期
+                      + 2: 未过期
+                    type: integer
+                  model_desc:
+                    description: 车型
+                    maxLength: 30
+                    minLength: 0
+                    type: string
+                  next_maintain_from:
+                    description: 下次保养起始日期
+                    format: date
+                    type: string
+                  next_maintain_to:
+                    description: 下次保养截止日期
+                    format: date
+                    type: string
+                  register_date_from:
+                    description: 注册起始日期
+                    format: date
+                    type: string
+                  register_date_to:
+                    description: 注册结束日期
+                    format: date
+                    type: string
+                  repair_advise_from:
+                    description: 维修建议起始日期
+                    format: date
+                    type: string
+                  repair_advise_to:
+                    description: 维修建议结束日期
+                    format: date
+                    type: string
+                  repair_date_from:
+                    description: 保修到期起始日期
+                    format: date
+                    type: string
+                  repair_date_to:
+                    description: 保修到期截止日期
+                    format: date
+                    type: string
+                type: object
+              frequency:
+                description: |
+                  重复频率
+                  + 1: 每日首次到店
+                  + 2: 每次进店
+                  + 3: 仅提醒一次
+                enum:
+                  - 1
+                  - 2
+                  - 3
+                type: integer
+              notification_employee_ids:
+                description: 提醒对象ID列表
+                items:
+                  description: 提醒对象ID
+                  minimum: 1
+                  type: integer
+                maxItems: 20
+                minItems: 1
+                type: array
+              title:
+                description: 提醒内容
+                maxLength: 50
+                minLength: 1
+                type: string
+              type:
+                description: |
+                  提醒条件
+                  + 1: 客户招揽指定条件提醒
+                  + 2: 指定车牌提醒
+                type: integer
+            required:
+              - title
+              - content
+              - notification_employee_ids
+              - frequency
+              - type
+            type: object
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 修改到店提醒规则
+      tags:
+        - 客户到店提醒
+  '/v1/arrival_notifications/rules/{rule_id}/active':
+    post:
+      description: 需要 arrival_notification.edit 权限
+      parameters:
+        - description: 提醒规则ID
+          in: path
+          name: rule_id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 启用到店提醒规则
+      tags:
+        - 客户到店提醒
+  '/v1/arrival_notifications/rules/{rule_id}/cars':
+    get:
+      description: 需要 arrival_notification.view_self 或 arrival_notification.view_all 权限
+      parameters:
+        - in: path
+          name: rule_id
+          type: integer
+          required: true
+          description: 提醒规则ID
+        - description: 页码，未传则默认第 1 页
+          example: 1
+          in: query
+          name: page
+          required: false
+          type: integer
+        - description: 一页大小，未传默认为 20 条
+          example: 1
+          in: query
+          name: page_size
+          required: false
+          type: integer
+        - description: 车牌号
+          example: 粤B12345
+          in: query
+          name: plate_number
+          required: false
+          type: string
+        - description: 最后提醒起始日期
+          format: date
+          in: query
+          name: last_notify_date_from
+          required: false
+          type: string
+        - description: 最后提醒截止日期
+          format: date
+          in: query
+          name: last_notify_date_to
+          required: false
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              data:
+                properties:
+                  cars:
+                    description: 到店提醒规则列表
+                    items:
+                      properties:
+                        id:
+                          description: 车辆ID
+                          example: 1
+                          type: integer
+                        last_notify_time:
+                          description: 最后提醒时间
+                          example: '2020/05/20 08:00:00'
+                          type: string
+                        plate_number:
+                          description: 车牌号
+                          example: 粤B12345
+                          type: string
+                        vin:
+                          description: 车架号
+                          example: 123132321321
+                          type: string
+                      type: object
+                    type: array
+                  rule_type:
+                    description: |
+                      提醒条件类型
+                      + 1: 指定条件提醒
+                      + 2: 指定车牌提醒
+                    example: 1
+                    type: integer
+                  total_size:
+                    description: 数据总数
+                    example: 100
+                    type: integer
+                type: object
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 到店提醒车辆列表
+      tags:
+        - 客户到店提醒
+    post:
+      description: 需要 arrival_notification.edit 权限
+      parameters:
+        - description: 提醒规则ID
+          in: path
+          name: rule_id
+          required: true
+          type: integer
+        - in: body
+          name: post_data
+          required: true
+          schema:
+            properties:
+              plate_number:
+                description: 车牌号
+                type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 新增到店提醒车辆
+      tags:
+        - 客户到店提醒
+  '/v1/arrival_notifications/rules/{rule_id}/cars/batch_delete':
+    post:
+      description: 需要 arrival_notification.edit 权限
+      parameters:
+        - description: 提醒规则ID
+          in: path
+          name: rule_id
+          required: true
+          type: integer
+        - in: body
+          name: post_data
+          required: true
+          schema:
+            properties:
+              car_ids:
+                description: 车辆ID列表
+                items:
+                  type: integer
+                type: array
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 批量删除到店提醒车辆
+      tags:
+        - 客户到店提醒
+  '/v1/arrival_notifications/rules/{rule_id}/deactived':
+    post:
+      description: 需要 arrival_notification.edit 权限
+      parameters:
+        - description: 提醒规则ID
+          in: path
+          name: rule_id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            properties:
+              code:
+                description: 返回码
+                example: 0
+                type: integer
+              message:
+                description: 返回字符串描述
+                example: ok
+                type: string
+      summary: 停用到店提醒规则
+      tags:
+        - 客户到店提醒
+security:
+  - X-CSRF-Token: []
+securityDefinitions:
+  X-CSRF-Token:
+    in: header
+    name: X-CSRF-Token
+    type: apiKey
+swagger: '2.0'
+tags: []
